@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SophoShop - Vente en ligne</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FFB6C1;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #C0C0C0;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 3.5em;
+            margin: 10px 0;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .product {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            width: 30%;
+            margin: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .product img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .price {
+            font-size: 1.5em;
+            color: #FF0000;
+            margin: 10px 0;
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: #888;
+        }
+        .new-price {
+            color: #000;
+            font-weight: bold;
+        }
+        .delivery-info {
+            font-size: 1em;
+            color: #555;
+            margin: 10px 0;
+        }
+        footer {
+            background-color: #C0C0C0;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .whatsapp-button {
+            background-color: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .whatsapp-button:hover {
+            background-color: #128C7E;
+        }
+        .order-button {
+            background-color: #FFB6C1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .order-button:hover {
+            background-color: #FF69B4;
+        }
+        .cart {
+            background-color: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .cart input, .cart select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .cart-items {
+            margin-bottom: 20px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 1.1em;
+        }
+        .cart-item button {
+            background-color: #FFB6C1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .cart-item button:hover {
+            background-color: #FF69B4;
+        }
+        /* Styles pour la modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow: auto;
+        }
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 80vh;
+        }
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #bbb;
+        }
+        /* Styles pour le carrousel */
+        .carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-inner img {
+            width: 100%;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .carousel-prev,
+        .carousel-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .carousel-prev:hover,
+        .carousel-next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .carousel-prev {
+            left: 10px;
+        }
+        .carousel-next {
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SophoShop</h1>
+        <p>Votre boutique en ligne préférée</p>
+    </header>
+
+    <div class="products">
+        <!-- Produit 1 : Microphone K9-1 -->
+        <div class="product" data-name="Microphone K9-1" data-price="7500">
+            <img src="https://i.pinimg.com/736x/52/ed/95/52ed953ae392d3d177606e98a472bc43.jpg" alt="Microphone K9-1">
+            <h2>Microphone K9-1</h2>
+            <p>
+                Le Microphone K9-1 est un outil indispensable pour les professionnels du son. 
+                Avec sa sensibilité exceptionnelle et sa réduction de bruit, il capture chaque détail 
+                de votre voix ou de votre instrument. Idéal pour les enregistrements en studio ou les performances live.
+            </p>
+            <p class="price">
+                <span class="old-price">9500f</span>
+                <span class="new-price">7500f</span>
+            </p>
+            <p class="delivery-info">Livraison gratuite</p>
+            <button class="whatsapp-button" onclick="window.open('https://wa.me/22664352521')">Commander via WhatsApp</button>
+            <button class="order-button" onclick="addToCart(this)">Ajouter au panier</button>
+        </div>
+
+        <!-- Produit 2 : Papier peint autocollant -->
+        <div class="product" data-name="Papier peint autocollant" data-price="9000">
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <img src="https://i.pinimg.com/736x/d5/2e/6f/d52e6f5e78e60206fcd0310e7dd81f1c.jpg" alt="Papier peint autocollant">
+                    <img src="https://i.pinimg.com/736x/ca/3d/5f/ca3d5f29131a1017bbe88fcc3dd5aab9.jpg" alt="Papier peint autocollant">
+                    <img src="https://i.pinimg.com/736x/72/a8/5e/72a85ec2a39583f30977dbddf96d8cf9.jpg" alt="Papier peint autocollant">
+                </div>
+                <button class="carousel-prev">&#10094;</button>
+                <button class="carousel-next">&#10095;</button>
+            </div>
+            <h2>Papier peint autocollant</h2>
+            <p>
+                Transformez vos murs avec ce papier peint autocollant facile à poser. 
+                Disponible en plusieurs motifs modernes, il s'adapte à tous les intérieurs. 
+                Avec ses dimensions de 6m² (10m x 60cm), il est parfait pour redécorer une pièce entière.
+            </p>
+            <p class="price">9000f le rouleau</p>
+            <button class="whatsapp-button" onclick="window.open('https://wa.me/22664352521')">Commander via WhatsApp</button>
+            <button class="order-button" onclick="addToCart(this)">Ajouter au panier</button>
+        </div>
+
+        <!-- Produit 3 : Camera Shutter -->
+        <div class="product" data-name="Camera Shutter" data-price="2000">
+            <div class="carousel">
+                <div class="carousel-inner">
+                    <img src="https://i.pinimg.com/736x/ee/9d/12/ee9d1258bdb1aa3857cb18cad36f8fd9.jpg" alt="Camera Shutter">
+                    <img src="https://i.pinimg.com/736x/a7/f2/ab/a7f2ab98d8e870293a4da1be729f0299.jpg" alt="Camera Shutter">
+                    <img src="https://i.pinimg.com/736x/c9/cf/c5/c9cfc5bb1358e509c0c09405950bc85f.jpg" alt="Camera Shutter">
+                </div>
+                <button class="carousel-prev">&#10094;</button>
+                <button class="carousel-next">&#10095;</button>
+            </div>
+            <h2>Camera Shutter</h2>
+            <p>
+                Le Camera Shutter est un accessoire polyvalent pour les amateurs de photographie. 
+                Grâce à son design compact et sa compatibilité avec la plupart des appareils photo, 
+                il vous permet de capturer des moments uniques avec précision et style.
+            </p>
+            <p class="price">2000f</p>
+            <button class="whatsapp-button" onclick="window.open('https://wa.me/22664352521')">Commander via WhatsApp</button>
+            <button class="order-button" onclick="addToCart(this)">Ajouter au panier</button>
+        </div>
+    </div>
+
+    <!-- Panier -->
+    <div class="cart">
+        <h2>Panier</h2>
+        <div class="cart-items" id="cart-items">
+            <!-- Les articles ajoutés au panier apparaîtront ici -->
+        </div>
+        <form id="cart-form">
+            <label for="name">Nom complet :</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="phone">Numéro de téléphone :</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="address">Lieu de livraison :</label>
+            <input type="text" id="address" name="address" required>
+
+            <label for="delivery-mode">Mode de réception :</label>
+            <select id="delivery-mode" name="delivery-mode" required>
+                <option value="livraison">Livraison (à partir de 1000f)</option>
+                <option value="expedition">Expédition (2000f)</option>
+            </select>
+
+            <button type="submit" class="order-button">Valider la commande</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>Contactez-nous :</p>
+        <p>Téléphone : +226 64352521 / 06189353</p>
+        <p>Email : dieudonnekhy@gmail.com</p>
+        <p>Lieu : Burkina Faso - Ouagadougou</p>
+        <p>Livraison à partir de 1000f | Expédition à 2000f</p>
+    </footer>
+
+    <!-- Modal pour l'image agrandie -->
+    <div id="image-modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="zoomed-image">
+    </div>
+
+    <script>
+        // Panier (stocké dans un tableau)
+        let cart = [];
+
+        // Fonction pour ajouter un produit au panier
+        function addToCart(button) {
+            const product = button.closest('.product');
+            const productName = product.getAttribute('data-name');
+            const productPrice = parseFloat(product.getAttribute('data-price'));
+
+            // Ajouter le produit au panier
+            cart.push({ name: productName, price: productPrice });
+
+            // Mettre à jour l'affichage du panier
+            updateCartDisplay();
+        }
+
+        // Fonction pour mettre à jour l'affichage du panier
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = ''; // Vider le panier actuel
+
+            let total = 0;
+
+            // Ajouter chaque produit au panier
+            cart.forEach((item, index) => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <span>${item.name} - ${item.price}f</span>
+                    <button onclick="removeFromCart(${index})">Supprimer</button>
+                `;
+                cartItems.appendChild(cartItem);
+
+                total += item.price;
+            });
+
+            // Récupérer les frais de livraison/expédition
+            const deliveryMode = document.getElementById('delivery-mode').value;
+            let deliveryCost = 0;
+            if (deliveryMode === 'livraison') {
+                deliveryCost = 1000; // Frais de livraison
+            } else if (deliveryMode === 'expedition') {
+                deliveryCost = 2000; // Frais d'expédition
+            }
+
+            // Afficher les frais de livraison/expédition
+            const deliveryElement = document.createElement('div');
+            deliveryElement.className = 'cart-item';
+            deliveryElement.innerHTML = `<span>Frais de ${deliveryMode} : ${deliveryCost}f</span>`;
+            cartItems.appendChild(deliveryElement);
+
+            // Afficher le total final
+            const totalElement = document.createElement('div');
+            totalElement.className = 'cart-item';
+            totalElement.innerHTML = `<strong>Total : ${total + deliveryCost}f</strong>`;
+            cartItems.appendChild(totalElement);
+        }
+
+        // Fonction pour supprimer un produit du panier
+        function removeFromCart(index) {
+            cart.splice(index, 1); // Supprimer l'article du panier
+            updateCartDisplay(); // Mettre à jour l'affichage
+        }
+
+        // Gérer la soumission du formulaire
+        const cartForm = document.getElementById('cart-form');
+        cartForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Empêcher le rechargement de la page
+
+            // Récupérer les valeurs du formulaire
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const deliveryMode = document.getElementById('delivery-mode').value;
+
+            // Créer le message pour WhatsApp
+            let message = `Nouvelle commande sur SophoShop :%0A%0A` +
+                          `Nom : ${name}%0A` +
+                          `Téléphone : ${phone}%0A` +
+                          `Lieu de livraison : ${address}%0A` +
+                          `Mode de réception : ${deliveryMode}%0A%0A` +
+                          `Articles commandés :%0A`;
+
+            // Ajouter les articles du panier au message
+            cart.forEach(item => {
+                message += `- ${item.name} : ${item.price}f%0A`;
+            });
+
+            // Ajouter les frais de livraison/expédition
+            let deliveryCost = 0;
+            if (deliveryMode === 'livraison') {
+                deliveryCost = 1000;
+            } else if (deliveryMode === 'expedition') {
+                deliveryCost = 2000;
+            }
+            message += `%0AFrais de ${deliveryMode} : ${deliveryCost}f%0A`;
+
+            // Ajouter le total final
+            const total = cart.reduce((sum, item) => sum + item.price, 0) + deliveryCost;
+            message += `%0ATotal : ${total}f%0A%0A` +
+                       `Merci de traiter cette commande !`;
+
+            // Rediriger vers WhatsApp
+            window.open(`https://wa.me/22664352521?text=${message}`, '_blank');
+        });
+
+        // Script pour la modal
+        const modal = document.getElementById('image-modal');
+        const zoomedImage = document.getElementById('zoomed-image');
+        const closeBtn = document.querySelector('.close');
+
+        document.querySelectorAll('.product img').forEach(image => {
+            image.addEventListener('click', () => {
+                modal.style.display = 'block';
+                zoomedImage.src = image.src;
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Fonction pour initialiser le carrousel
+        function initCarousel(carousel) {
+            const inner = carousel.querySelector('.carousel-inner');
+            const images = inner.querySelectorAll('img');
+            const prevButton = carousel.querySelector('.carousel-prev');
+            const nextButton = carousel.querySelector('.carousel-next');
+
+            let currentIndex = 0;
+
+            // Afficher l'image actuelle
+            const showImage = (index) => {
+                const offset = -index * 100;
+                inner.style.transform = `translateX(${offset}%)`;
+            };
+
+            // Passer à l'image suivante
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % images.length;
+                showImage(currentIndex);
+            });
+
+            // Revenir à l'image précédente
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                showImage(currentIndex);
+            });
+
+            // Afficher la première image au chargement
+            showImage(currentIndex);
+        }
+
+        // Initialiser tous les carrousels sur la page
+        document.querySelectorAll('.carousel').forEach(initCarousel);
+    </script>
+</body>
+</html>
